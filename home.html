@@ -4,20 +4,36 @@
     <link rel="stylesheet" type="text/css" href="home.css">
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map">
+      
+    </div>
     <script type="text/javascript">
+      var map
 
-var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
-}
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 40.121993, lng: -88.257614},
+          zoom: 13
+        })
+      }
+    
+      var service = new google.maps.DistanceMatrixService()
 
+      function distanceMatrix(origins, destinations) {
+        service.getDistanceMatrix(
+          {
+            origins: origins,
+            destinations: destinations,
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.IMPERIAL,
+          }, 
+          callback
+        )
+      }
+
+      
     </script>
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
     </script>
   </body>
 </html>
