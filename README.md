@@ -1,4 +1,5 @@
 # DeliveryProject
+#### PLEASE, remember to create a new branch for any changes. Never start working on the master branch.
 ##### INSTALL Sublime Text 2
 ##### DO NOT touch the index.php file, that is there to make heroku work.
 
