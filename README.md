@@ -21,3 +21,8 @@ To check changes to current branch since last commit: git status
 To prepare changes since last commit for a new commit: git add -A
 
 To commit changes: git commit -m 'NAMEOFCOMMIT'
+
+To push current branch to git repo (first time on each branch): git push --set-upstream origin NAMEOFBRANCH
+
+To push new commits on current branch to git repo: git push
+
