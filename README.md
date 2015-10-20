@@ -1,6 +1,12 @@
 # DeliveryProject
 
-Our remote server is located here: https://limitless-ravine-7258.herokuapp.com/
+To view page locally:
+1) Right click anywhere on text interface on sublime (while viewing html file)
+2) Select 'Copy File Path'
+3) Paste into web browser
+4) Reload the page everytime you make changes
+
+Our remote server is located here: https://limitless-ravine-7258.herokuapp.com/ (this can only be pushed to by Arjit, let me know if you'd like to push something to this and I'll do it for you)
 
 Do not touch the index.php file, that is there to make heroku work.
 
@@ -25,4 +31,6 @@ To commit changes: git commit -m 'NAMEOFCOMMIT'
 To push current branch to git repo (first time on each branch): git push --set-upstream origin NAMEOFBRANCH
 
 To push new commits on current branch to git repo: git push
+
+To delete local branch (make sure you're on a different branch): git branch -D NAMEOFBRANCH
 
