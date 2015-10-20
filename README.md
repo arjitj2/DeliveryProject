@@ -19,8 +19,6 @@ To clone repo (only have to do first time): git clone https://github.com/arjitj2
 
 To check current branch and list existing branches: git branch
 
-To start and switch to new branch: git checkout -b NAMEOFBRANCH
-
 To switch to existing branch: git checkout NAMEOFBRANCH
 
 To check changes to current branch since last commit: git status
@@ -34,6 +32,11 @@ To push current branch to git repo (first time on each branch): git push --set-u
 To push new commits on current branch to git repo: git push
 
 To delete local branch (make sure you're on a different branch): git branch -D NAMEOFBRANCH
+
+##### IMPORTANT! Do the following on the master branch every time before creating new branch:
+To pull changes to current branch from GitHub repo: git pull
+
+To start and switch to new branch (always do this while on the master branch): git checkout -b NAMEOFBRANCH
 
 ### Submitting Branches for Review 
 ###### (Remember, this is for finished products. Do not do this until it has been tested and probably looked at by someone else first)
