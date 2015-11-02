@@ -10,7 +10,13 @@
           zoom: 13
         })
       }
-    
+      
+      var origin = ""
+      var destination = ""
+      function storeInput() {
+        alert("a")
+      }
+
       var service = new google.maps.DistanceMatrixService()
 
       function distanceMatrix(origins, destinations) {
@@ -54,14 +60,10 @@
     <div id="map">
     </div>
     <div>
-      <form action="action_page.php">
-        First name:<br>
-        <input type="text" value="Mickey">
-        <br>
-        Last name:<br>
-        <input type="text" name="lastname" value="Mouse">
-        <br><br>
-        <input type="submit" value="Submit">
+      <form>
+        Origin:<br><input type="text" id="origin" value="England"><br>
+        Destination:<br><input type="text" id="dest" value="Croatia"><br><br>
+        <input type="submit" value="Submit" onclick="storeInput()">
       </form>
       <p id="responses"></p>
     </div>
