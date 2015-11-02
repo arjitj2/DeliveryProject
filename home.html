@@ -21,6 +21,10 @@
         origins = [document.getElementById("origin").value]
         destinations = [document.getElementById("dest").value]
 
+        distanceMatrix(service, origins, destinations)
+      }
+
+      function distanceMatrix(service, origins, destinations) {
         service.getDistanceMatrix(
           {
             origins: origins,
@@ -57,7 +61,7 @@
       <form>
         Origin:<br><input type="text" id="origin" value="England"><br>
         Destination:<br><input type="text" id="dest" value="Croatia"><br><br>
-        <input type="submit" value="Submit" onclick="storeInput()">
+        <input type="submit" value="Submit" onclick="initMap()">
       </form>
       <p id="responses"></p>
     </div>
