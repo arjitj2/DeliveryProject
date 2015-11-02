@@ -1,9 +1,18 @@
 html, body { 
-  height: 100%; margin: 0; padding: 0; 
+  height: 100%; 
+  margin: 0; 
+  padding: 10px;
 }
       
 
 #map { 
   height: 500px;
   width: 500px; 
+  position: relative;
+  float: left;
+}
+
+#responses {
+  position: relative;
+  float: right;
 }

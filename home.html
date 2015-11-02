@@ -2,59 +2,75 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="home.css">
-  </head>
-  <body onload="distanceMatrix('Greenwich, England','Stockholm, Sweden')">
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
+    <title>Delivery</title>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&sensor=false&callback=initMap">
     </script>
-    <div id="map">
-    </div>
-    <div id="responses">
-    </div>
     <script type="text/javascript">
       var map
+      var service
+      var distances = []
+      var origin = ""
+      var destination = ""
 
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.121993, lng: -88.257614},
           zoom: 13
         })
+      
+        computeInput()
       }
-    
-      var service = new google.maps.DistanceMatrixService()
 
-      function distanceMatrix(origins, destinations) {
+      function computeInput() {
+        distances = []
+        service = new google.maps.DistanceMatrixService()
+
+        origins = [document.getElementById("origin").value]
+        destinations = [document.getElementById("dest").value]
+
+        distanceMatrix(service, origins, destinations)
+      }
+
+      function distanceMatrix(service, origins, destinations) {
         service.getDistanceMatrix(
           {
             origins: origins,
             destinations: destinations,
             travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.IMPERIAL,
-          }, 
-          callback
+          }, function(response, status) {
+            if (status == google.maps.DistanceMatrixStatus.OK) {
+              var origins = response.originAddresses;
+              var destinations = response.destinationAddresses;
+
+              for (var i = 0; i < origins.length; i++) {
+                var results = response.rows[i].elements;
+                for (var j = 0; j < results.length; j++) {
+                  var element = results[j];
+                  if (element.status == "OK") {
+                    var distance = element.distance.text;
+                    var duration = element.duration.text;
+                    var from = origins[i];
+                    var to = destinations[j];
+                    distances[distances.length] = distance
+                  }
+                }
+              }
+            }
+            document.getElementById("responses").innerHTML = distances
+          }
         )
       }
-
-      var distances = []
-
-      function callback(response, status) {
-        if (status == google.maps.DistanceMatrixStatus.OK) {
-          var origins = response.originAddresses;
-          var destinations = response.destinationAddresses;
-
-          for (var i = 0; i < origins.length; i++) {
-            var results = response.rows[i].elements;
-            for (var j = 0; j < results.length; j++) {
-              var element = results[j];
-              var distance = element.distance.text;
-              var duration = element.duration.text;
-              var from = origins[i];
-              var to = destinations[j];
-              distances << distance
-            }
-          }
-        }
-        document.getElementById("responses").innerHTML = distances
-      }
     </script>
+  </head>
+  <body>
+    <div id="map">
+    </div>
+    <div>
+      Origin:<br><input type="text" id="origin" value="France"><br>
+      Destination:<br><input type="text" id="dest" value="Spain"><br><br>
+      <button onclick="computeInput()">Submit</button>
+      <p id="responses"></p>
+    </div>
   </body>
 </html>
