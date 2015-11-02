@@ -16,16 +16,17 @@
       var destination = ""
       function storeInput() {
         origin = document.getElementById("origin").value
-        alert(origin)
+        destination = document.getElementById("dest").value
+        distanceMatrix(origin, destination)
       }
 
       var service = new google.maps.DistanceMatrixService()
 
-      function distanceMatrix(origins, destinations) {
+      function distanceMatrix(origin, destination) {
         service.getDistanceMatrix(
           {
-            origins: origins,
-            destinations: destinations,
+            origins: origin,
+            destinations: destination,
             travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.IMPERIAL,
           }, 
