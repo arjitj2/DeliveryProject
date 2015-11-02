@@ -8,4 +8,11 @@ html, body {
 #map { 
   height: 500px;
   width: 500px; 
+  position: relative;
+  float: left;
+}
+
+#responses {
+  position: relative;
+  float: right;
 }

@@ -4,7 +4,6 @@
     <link rel="stylesheet" type="text/css" href="home.css">
     <script type="text/javascript">
       var map
-
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.121993, lng: -88.257614},
@@ -49,12 +48,22 @@
       }
     </script>
   </head>
-  <body onload="distanceMatrix('Greenwich, England','Stockholm, Sweden')">
+  <body>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
     </script>
     <div id="map">
     </div>
-    <div id="responses">
+    <div>
+      <form action="action_page.php">
+        First name:<br>
+        <input type="text" value="Mickey">
+        <br>
+        Last name:<br>
+        <input type="text" name="lastname" value="Mouse">
+        <br><br>
+        <input type="submit" value="Submit">
+      </form>
+      <p id="responses"></p>
     </div>
   </body>
 </html>
