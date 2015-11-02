@@ -3,30 +3,32 @@
   <head>
     <link rel="stylesheet" type="text/css" href="home.css">
     <title>Delivery</title>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&sensor=false&callback=initMap">
+    </script>
     <script type="text/javascript">
       var map
+      var service
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.121993, lng: -88.257614},
           zoom: 13
         })
+        service = new google.maps.DistanceMatrixService()
       }
       
       var origin = ""
       var destination = ""
       function storeInput() {
-        origin = document.getElementById("origin").value
-        destination = document.getElementById("dest").value
-        distanceMatrix(origin, destination)
+        origins = [document.getElementById("origin").value]
+        destinations = [document.getElementById("dest").value]
+        distanceMatrix(origins, destinations)
       }
 
-      var service = new google.maps.DistanceMatrixService()
-
-      function distanceMatrix(origin, destination) {
+      function distanceMatrix(origins, destinations) {
         service.getDistanceMatrix(
           {
-            origins: origin,
-            destinations: destination,
+            origins: origins,
+            destinations: destinations,
             travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.IMPERIAL,
           }, 
@@ -37,6 +39,7 @@
       var distances = []
 
       function callback(response, status) {
+        alert("sup")
         if (status == google.maps.DistanceMatrixStatus.OK) {
           var origins = response.originAddresses;
           var destinations = response.destinationAddresses;
@@ -58,8 +61,6 @@
     </script>
   </head>
   <body>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
-    </script>
     <div id="map">
     </div>
     <div>
