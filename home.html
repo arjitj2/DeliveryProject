@@ -2,6 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="home.css">
+    <title>Delivery</title>
     <script type="text/javascript">
       var map
       function initMap() {
@@ -14,7 +15,8 @@
       var origin = ""
       var destination = ""
       function storeInput() {
-        alert("a")
+        origin = document.getElementById("origin").value
+        alert(origin)
       }
 
       var service = new google.maps.DistanceMatrixService()
