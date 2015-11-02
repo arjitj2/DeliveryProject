@@ -2,14 +2,6 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="home.css">
-  </head>
-  <body onload="distanceMatrix('Greenwich, England','Stockholm, Sweden')">
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
-    </script>
-    <div id="map">
-    </div>
-    <div id="responses">
-    </div>
     <script type="text/javascript">
       var map
 
@@ -56,5 +48,13 @@
         document.getElementById("responses").innerHTML = distances
       }
     </script>
+  </head>
+  <body onload="distanceMatrix('Greenwich, England','Stockholm, Sweden')">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpSSHy2RLV7562BeqzPEoVt5FfFDk3AtY&callback=initMap">
+    </script>
+    <div id="map">
+    </div>
+    <div id="responses">
+    </div>
   </body>
 </html>
