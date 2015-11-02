@@ -9,15 +9,22 @@
       var map
       var service
       var distances = []
+      var origin = ""
+      var destination = ""
 
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.121993, lng: -88.257614},
           zoom: 13
         })
+      
+        computeInput()
+      }
+
+      function computeInput() {
+        distances = []
         service = new google.maps.DistanceMatrixService()
-        var origin = ""
-        var destination = ""
+
         origins = [document.getElementById("origin").value]
         destinations = [document.getElementById("dest").value]
 
@@ -40,11 +47,13 @@
                 var results = response.rows[i].elements;
                 for (var j = 0; j < results.length; j++) {
                   var element = results[j];
-                  var distance = element.distance.text;
-                  var duration = element.duration.text;
-                  var from = origins[i];
-                  var to = destinations[j];
-                  distances[distances.length] = distance
+                  if (element.status == "OK") {
+                    var distance = element.distance.text;
+                    var duration = element.duration.text;
+                    var from = origins[i];
+                    var to = destinations[j];
+                    distances[distances.length] = distance
+                  }
                 }
               }
             }
@@ -58,11 +67,9 @@
     <div id="map">
     </div>
     <div>
-      <form>
-        Origin:<br><input type="text" id="origin" value="England"><br>
-        Destination:<br><input type="text" id="dest" value="Croatia"><br><br>
-        <input type="submit" value="Submit" onclick="initMap()">
-      </form>
+      Origin:<br><input type="text" id="origin" value="France"><br>
+      Destination:<br><input type="text" id="dest" value="Spain"><br><br>
+      <button onclick="computeInput()">Submit</button>
       <p id="responses"></p>
     </div>
   </body>
