@@ -31,16 +31,33 @@ end
 
 
 //seeding people
-numberofpeople = parseInt(document.getElementById(whatever))
+people = []
+bias1 = 0.7
+bias2 = 0.6
+
 
 function createPeople() {
+  numberofpeople = parseInt(document.getElementById("people"))
   for(i=0, i<numberofpeople.length, i++) {
-    createPerson(i)
+    createPerson()
   }
 }
 
-function createPerson(i) {
-  
+function createPerson() {
+  person = new Object()
+  person["home"] = generate_home_address()
+  person["work"] = generate_work_address()
+  if (Math.random()<bias1) {
+    person["package"] = true
+  } else {
+    person["package"] = false
+  }
+  if (Math.random()<bias2) {
+    person["is_home"] = true
+  } else {
+    person["is_home"] = false
+  }
+  people[people.length] = person
 }
 
 

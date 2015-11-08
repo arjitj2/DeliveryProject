@@ -18,6 +18,13 @@ html, body {
   border: 2px solid black;
 }
 
+#inputs2 {
+  position: relative;
+  float: left;
+  height: 150px;
+  border: 2px solid black;
+}
+
 #outputs {
   position: relative;
   float: left;
