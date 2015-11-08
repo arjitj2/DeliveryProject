@@ -5,12 +5,16 @@ var origin = ""
 var destination = ""
 
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = newMap()
+
+  computeInput()
+}
+
+function newMap() {
+  new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.121993, lng: -88.257614},
     zoom: 13
   })
-
-  computeInput()
 }
 
 function computeInput() {
