@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Google Maps JavaScript API v3 Example: Geocoding Simple</title>
+  <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_uwnnuuyCHdzY1f8pQyGJKUpmoRk0xhA&signed_in=true&callback=initMap"></script>
+  </body>
+  <style>
+  html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  }
+  #map_canvas {
+  height: 100%;
+  width: 100%;
+  }
+  #submit {
+  text-align:center;
+  }
+  </style>
+
+<!-- jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!--boostrap-->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+<script type="text/javascript">
+  // from http://stackoverflow.com/questions/15925980/using-address-instead-of-longitude-and-latitude-with-google-maps-api
+  //how to get a geocoded location
+
+
+
+  var geocoder;
+  var map;
+  var addresses =[
+    {
+      address:"804 N Lincoln Drive,Urbana,IL,61801",
+      location:{lat:40.119459, lng:-88.219108},
+      parksat:{lat:40.112407, lng:-88.224919}
+    },
+    {
+      address:"822 W Hill St,Urbana, IL 61801",
+      location:{lat:40.1192991, lng:-88.21911920000002}
+    },
+    {
+      address:"810 W Hill St,Urbana, IL 61801",
+      location:{lat:40.1194149, lng:-88.218097},
+      parksat:{lat:40.112407, lng:-88.224919}
+
+    },
+    {
+      address:"803 N Busey Ave,Urbana, IL 61801",
+      location:{lat:40.119467, lng:-88.217267}
+    }
+  ];
+
+
+  var markers=[];
+  var deliveryProbability=0.7;
+  var parkingProbability=0.4;
+  var parkingIcon='http://www.googlemapsmarkers.com/v1/009900/'
+
+  var findLocation=function(address) {
+    if (!geocoder) {
+      return
+    }
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status != google.maps.GeocoderStatus.OK) {
+        alert("Geocode was not successful at address "+address+" for the following reason: " + status);
+        return;
+      }
+      if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+          alert("No results found for address "+address)
+          return;
+      } 
+      var thisLocation=results[0].geometry.location;
+      alert("address: "+address+"; coordinates: "+thisLocation);
+    });
+  }
+
+
+
+  function plotPoints() {
+      markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers=[];
+      addresses.forEach(function(doc) {
+        if (Math.random()>deliveryProbability) {
+          return;
+        }
+        /*var infowindow = new google.maps.InfoWindow(
+          { content: '<b>'+address+'</b>',
+            size: new google.maps.Size(150,50)
+          });*/
+
+        var parkedFlag=(doc.parksat) && (Math.random()>parkingProbability);
+        var markerDoc = {
+            position: parkedFlag ? doc.parksat : doc.location,
+            map: map, 
+            title:doc.address,
+        };
+        if (parkedFlag) {
+          markerDoc.icon=parkingIcon;
+          markerDoc.title="car from "+doc.address+" parked here";
+        }
+        markers.push(new google.maps.Marker(markerDoc));
+      /*google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+      });*/
+      });
+  }
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+    addresses.forEach(function(doc) {
+      if (!doc.location) {
+        findLocation(doc.address);
+      }
+    })
+    var latlng = new google.maps.LatLng(40.119135,-88.219423);
+    var myOptions = {
+      zoom: 14,
+      center: latlng,
+    mapTypeControl: true,
+    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+    navigationControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    plotPoints();
+  }
+</script>
+</head>
+<body onload="initialize()">
+  <div id="submit"><button type="button" class="btn btn-primary ui-content" onclick="plotPoints()">Submit</button></div>
+ <div id="map_canvas">
+</body>
+</html>
