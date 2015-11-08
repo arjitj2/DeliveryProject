@@ -45,9 +45,9 @@ function distanceMatrix(service, origins, destinations) {
             var element = results[j];
             if (element.status == "OK") {
               var distance = element.distance.text;
-              var duration = element.duration.text;
-              var from = origins[i];
-              var to = destinations[j];
+              // var duration = element.duration.text;
+              // var from = origins[i];
+              // var to = destinations[j];
               distances[distances.length] = distance
             }
           }

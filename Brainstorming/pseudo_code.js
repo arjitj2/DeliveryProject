@@ -24,3 +24,47 @@ people.each do |person|
     if person.has_pack = true
       //distance matrix bullshit
 end
+
+
+
+
+
+
+//seeding people
+numberofpeople = parseInt(document.getElementById(whatever))
+
+function createPeople() {
+  for(i=0, i<numberofpeople.length, i++) {
+    createPerson(i)
+  }
+}
+
+function createPerson(i) {
+  
+}
+
+
+
+
+origins = ["Peoria, IL"]
+
+//rectangular
+latmin =
+latmax = 
+latrange = latmax-latmin
+
+lonmin = 
+lonmax =
+lonrange = lonmax-lonmin
+
+numberofhomes = parseInt(document.getElementById(whatever))
+
+addresses = []
+
+numberofhomes.times do 
+  lat = latmin + (latrange*Math.random())
+  lon = lonmin + (lonrange*Math.random())
+
+
+end
+
