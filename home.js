@@ -63,6 +63,7 @@ function distanceMatrix(service, origins, destinations) {
 
 function createPeople() {
   numberofpeople = parseInt(document.getElementById("people").value)
+
   for (i=0; i<numberofpeople; i++) {
     createPerson()
   }
@@ -71,8 +72,8 @@ function createPeople() {
 
 function createPerson() {
   person = new Object()
-  // person["home"] = generate_home_address()
-  // person["work"] = generate_work_address()
+  person["home"] = generate_home_address()
+  person["work"] = generate_home_address()
   if (Math.random()<bias1) {
     person["package"] = "true"
   } else {
@@ -84,4 +85,34 @@ function createPerson() {
     person["is_home"] = "false"
   }
   people[people.length] = person
+}
+
+function generate_home_address() {
+  latitude = get_latitude().toString()
+  longitude = get_longitude().toString()
+
+  latlng = latitude + ", " + longitude
+  return latlng
+}
+
+function get_longitude() {
+  min_lon = parseFloat(document.getElementById("min_lon").value)
+  max_lon = parseFloat(document.getElementById("max_lon").value)
+  lon_range = max_lon - min_lon
+
+  lng = min_lon + (Math.random() * lon_range)
+  return lng
+}
+
+function get_latitude() {
+  min_lat = parseFloat(document.getElementById("min_lat").value)
+  max_lat = parseFloat(document.getElementById("max_lat").value)
+  lat_range = max_lat - min_lat
+
+  lat = min_lat + (Math.random() * lat_range)
+  return lat
+}
+
+function generate_work_address() {
+
 }
