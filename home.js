@@ -73,7 +73,7 @@ function createPeople() {
 function createPerson() {
   person = new Object()
   person["home"] = generate_home_address()
-  person["work"] = generate_home_address()
+  person["work"] = generate_work_address()
   if (Math.random()<bias1) {
     person["package"] = "true"
   } else {
@@ -114,5 +114,10 @@ function get_latitude() {
 }
 
 function generate_work_address() {
+  work_addresses = []
+  work_addresses.push(document.getElementById("parking1").value)
+  work_addresses.push(document.getElementById("parking2").value)
+  work_addresses.push(document.getElementById("parking3").value)
 
+  return work_addresses[Math.floor(Math.random()*work_addresses.length)]
 }
