@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Google Maps JavaScript API v3 Example: Geocoding Simple</title>
+<title>Rich Sowers project</title>
   <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
   <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_uwnnuuyCHdzY1f8pQyGJKUpmoRk0xhA&signed_in=true&callback=initMap"></script>
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_uwnnuuyCHdzY1f8pQyGJKUpmoRk0xhA&signed_in=true"></script>
   </body>
   <style>
   html, body {
@@ -17,7 +17,11 @@
   width: 100%;
   }
   #submit {
-  text-align:center;
+    text-align:center;
+  }
+  .control {
+    text-align:center;
+    width: 20%;
   }
   </style>
 
@@ -34,6 +38,8 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+<!-- jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
 
 
 <script type="text/javascript">
@@ -68,8 +74,8 @@
 
 
   var markers=[];
-  var deliveryProbability=0.7;
-  var parkingProbability=0.4;
+  var deliveryProbability;
+  var parkingProbability;
   var parkingIcon='http://www.googlemapsmarkers.com/v1/009900/'
 
   var findLocation=function(address) {
@@ -90,9 +96,21 @@
     });
   }
 
+  var parkingBiastooltip=function() {
+    var bias=document.getElementById("parkingBias").value/100;
+    document.getElementById("parkingBias").setAttribute("title", bias)
+  }
+
+  var deliveryBiastooltip=function() {
+    var bias=document.getElementById("deliveryBias").value/100;
+    document.getElementById("deliveryBias").setAttribute("title", bias)
+  }
+
 
 
   function plotPoints() {
+      deliveryProbability=document.getElementById("deliveryBias").value/100;
+      parkingProbability=document.getElementById("parkingBias").value/100;
       markers.forEach(function(marker) {
         marker.setMap(null);
       });
@@ -140,11 +158,24 @@
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     plotPoints();
+    parkingBiastooltip();
+    deliveryBiastooltip();
   }
 </script>
 </head>
-<body onload="initialize()">
-  <div id="submit"><button type="button" class="btn btn-primary ui-content" onclick="plotPoints()">Submit</button></div>
+<body onload="initialize()">\
+<div id="submit">
+<form class="form-inline">
+  <div class="form-group">
+    <label>Delivery Bias</label><input id="deliveryBias" data-toggle="tooltip" class="control"  onchange="deliveryBiastooltip()" type="range" min="0" max="100">
+  </div>
+  <div class="form-group">
+    <label>Parking Bias</label><input id="parkingBias" type="range" class="control" data-toggle="tooltip" onchange="parkingBiastooltip()" min="0" max="100">
+  </div>
+    <button id="ssubmit" type="button" class="control btn btn-primary ui-content" onclick="plotPoints()">Submit</button>
+</form>
+</div>
+
  <div id="map_canvas">
 </body>
 </html>
