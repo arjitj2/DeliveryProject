@@ -41,4 +41,5 @@ html, body {
 p {
   position: relative;
   float: left;
+  clear: left;
 }

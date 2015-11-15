@@ -2,83 +2,97 @@
 
 var map
 var service
+var directionsDisplay
 var geocoder
-var distances = []
 var origin = ""
 var destination = ""
 var bias1 = 0.7
 var bias2 = 0.6
 var people = []
+var total_distance = 0
+var total_duration = 0
 
 //MAP INITIALIZATION
 
 function initMap() {
-  map = newMap()
-  geocoder = new google.maps.Geocoder
-
-  computeInput()
-}
-
-function newMap() {
-  new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.121993, lng: -88.257614},
     zoom: 13
   })
+  service = new google.maps.DirectionsService
+  directionsDisplay = new google.maps.DirectionsRenderer
+  directionsDisplay.setMap(map)
+
+  computeInput(service, directionsDisplay)
 }
 
 //DISTANCE CALCULATIONS
 
 function computeInput() {
-  service = new google.maps.DistanceMatrixService()
+  origin = document.getElementById("origin").value
+  destination = document.getElementById("dest").value
 
-  origins = [document.getElementById("origin").value]
-  destinations = [document.getElementById("dest").value]
-
-  distanceMatrix(service, origins, destinations)
+  calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
 }
 
-function distanceMatrix(service, origins, destinations) {
-  service.getDistanceMatrix(
+function calculateAndDisplayRoute(service, directionsDisplay, origin, destination) {
+  console.log("BEGIN DIRECTION SERVICE")
+  // console.log(origins)
+  // console.log(destinations)
+  service.route(
     {
-      origins: origins,
-      destinations: destinations,
+      origin: origin,
+      destination: destination,
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,
-    }, function(response, status) {
-      if (status == google.maps.DistanceMatrixStatus.OK) {
-        var origins = response.originAddresses;
-        var destinations = response.destinationAddresses;
-
-        for (var i = 0; i < origins.length; i++) {
-          var results = response.rows[i].elements;
-          for (var j = 0; j < results.length; j++) {
-            var element = results[j];
-            if (element.status == "OK") {
-              var distance = element.distance.text;
-              var duration = element.duration.text;
-              var from = origins[i];
-              var to = destinations[j];
-              format_distance = 0
-              distance_array = distance.split(" ")
-              if (distance_array[1] == "mi") {
-                format_distance = parseFloat(distance_array[0])
-              } else if (distance_array[1] == "ft") {
-                format_distance = parseFloat(distance_array[0])/5280
-              }
-              distances[distances.length] = format_distance
-              values = []              
-              values.push(format_distance)
-              values.push(duration)
-            }
-          }
-        }
+    }, 
+    function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
       }
-      document.getElementById("responses").innerHTML = distances
-      document.getElementById("temp1").innerHTML = values[0]
-      document.getElementById("temp2").innerHTML = values[1]
+    console.log("COMPLETE DIRECTION SERVICE")
     }
   )
-}
+  // service.getDistanceMatrix(
+  //   {
+  //     origins: origins,
+  //     destinations: destinations,
+  //     travelMode: google.maps.TravelMode.DRIVING,
+  //     unitSystem: google.maps.UnitSystem.IMPERIAL,
+  //   }, 
+  //   function(response, status) {
+  //     if (status == google.maps.DistanceMatrixStatus.OK) {
+  //       var origins = response.originAddresses;
+  //       var destinations = response.destinationAddresses;
+
+  //       var element = response.rows[0].elements[0]
+  //       if (element.status == "OK") {
+  //         var distance = element.distance.text;
+  //         var duration = element.duration.text;
+  //         var from = origins[0];
+  //         var to = destinations[0];
+  //         // format_distance = 0
+  //         // distance_array = distance.split(" ")
+  //         // if (distance_array[1] == "mi") {
+  //         //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
+  //         // } else if (distance_array[1] == "ft") {
+  //         //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
+  //         // }
+  //         // total_distance += format_distance
+  //         // values = []              
+  //         // values.push(format_distance)
+  //         // values.push(duration)
+  //       }
+  //     }
+  //     // document.getElementById("responses").innerHTML = format_distance
+  //     // document.getElementById("temp1").innerHTML = values[0]
+  //     // document.getElementById("temp2").innerHTML = values[1]
+  //     // console.log(parseFloat(document.getElementById("temp1").innerHTML))
+  //   }
+  // )
+  }
 
 //PEOPLE ARRAY 
 
@@ -154,8 +168,7 @@ function perform_home_delivery() {
 
   calc_values = run_delivery(address_array)
 
-  document.getElementById("total_distance").innerHTML = "Total Distance: " + calc_values[0]
-  document.getElementById("total_duration").innerHTML = "Total Duration: " + calc_values[1]
+  document.getElementById("total_distance").innerHTML = "Total Distance: " + total_distance
 }
 
 function generate_home_address_array(delivery_address) {
@@ -174,23 +187,19 @@ function generate_home_address_array(delivery_address) {
 function run_delivery(address_array) {
   total_distance = 0
   total_duration = 0
-  service = new google.maps.DistanceMatrixService()
 
   for (i = 0; i<(address_array.length-1); i++) {
     origins = [address_array[i]]
     destinations = [address_array[i+1]]
+    console.log(origins)
+    console.log(destinations)
 
-    distanceMatrix(service, origins, destinations)
-
-    // total_distance = total_distance + calc_values[0]
-    // total_duration = total_distance + calc_values[1]
+    conduct_distance_matrix(service, origins, destinations)
   }
-
-  return [total_distance, total_duration]
 }
 
-function format_distance(distance) {
-
+function conduct_distance_matrix(service, origins, destinations) {
+  distanceMatrix(service, origins, destinations)
 }
 
 
