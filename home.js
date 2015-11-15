@@ -49,10 +49,24 @@ function calculateAndDisplayRoute(service, directionsDisplay, origin, destinatio
     function(response, status) {
       if (status === google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
+
+        distance = response.routes[0].legs[0].distance.text
+        duration = response.routes[0].legs[0].duration.text
+
+        format_distance = 0
+        distance_array = distance.split(" ")
+        if (distance_array[1] == "mi") {
+          format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
+        } else if (distance_array[1] == "ft") {
+          format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
+        }
+        total_distance += format_distance
+
       } else {
         window.alert('Directions request failed due to ' + status);
       }
     console.log("COMPLETE DIRECTION SERVICE")
+    console.log(total_distance)
     }
   )
   // service.getDistanceMatrix(
@@ -73,13 +87,13 @@ function calculateAndDisplayRoute(service, directionsDisplay, origin, destinatio
   //         var duration = element.duration.text;
   //         var from = origins[0];
   //         var to = destinations[0];
-  //         // format_distance = 0
-  //         // distance_array = distance.split(" ")
-  //         // if (distance_array[1] == "mi") {
-  //         //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
-  //         // } else if (distance_array[1] == "ft") {
-  //         //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
-  //         // }
+          // format_distance = 0
+          // distance_array = distance.split(" ")
+          // if (distance_array[1] == "mi") {
+          //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
+          // } else if (distance_array[1] == "ft") {
+          //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
+          // }
   //         // total_distance += format_distance
   //         // values = []              
   //         // values.push(format_distance)
@@ -166,7 +180,7 @@ function perform_home_delivery() {
 
   address_array = generate_home_address_array(delivery_address)
 
-  calc_values = run_delivery(address_array)
+  run_delivery(address_array)
 
   document.getElementById("total_distance").innerHTML = "Total Distance: " + total_distance
 }
@@ -189,17 +203,17 @@ function run_delivery(address_array) {
   total_duration = 0
 
   for (i = 0; i<(address_array.length-1); i++) {
-    origins = [address_array[i]]
-    destinations = [address_array[i+1]]
-    console.log(origins)
-    console.log(destinations)
+    origin = address_array[i]
+    destination = address_array[i+1]
+    console.log(origin)
+    console.log(destination)
 
-    conduct_distance_matrix(service, origins, destinations)
+    conduct_distance_calc(origin, destination)
   }
 }
 
-function conduct_distance_matrix(service, origins, destinations) {
-  distanceMatrix(service, origins, destinations)
+function conduct_distance_calc(origin, destination) {
+  calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
 }
 
 
