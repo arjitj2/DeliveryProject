@@ -1,5 +1,6 @@
 var map
 var service
+var geocoder
 var distances = []
 var origin = ""
 var destination = ""
@@ -9,6 +10,7 @@ var people = []
 
 function initMap() {
   map = newMap()
+  geocoder = new google.maps.Geocoder
 
   computeInput()
 }

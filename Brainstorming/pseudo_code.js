@@ -26,7 +26,7 @@ people.each do |person|
 end
 
 
-
+people[person].has_package = false
 
 
 
