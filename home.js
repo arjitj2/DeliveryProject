@@ -37,76 +37,37 @@ function computeInput() {
 
 function calculateAndDisplayRoute(service, directionsDisplay, origin, destination) {
   console.log("BEGIN DIRECTION SERVICE")
-  // console.log(origins)
-  // console.log(destinations)
   service.route(
     {
       origin: origin,
       destination: destination,
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,
-    }, 
-    function(response, status) {
-      if (status === google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
+    }, callback)
+}
 
-        distance = response.routes[0].legs[0].distance.text
-        duration = response.routes[0].legs[0].duration.text
+function callback(response, status) {
+  if (status === google.maps.DirectionsStatus.OK) {
+    directionsDisplay.setDirections(response);
 
-        format_distance = 0
-        distance_array = distance.split(" ")
-        if (distance_array[1] == "mi") {
-          format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
-        } else if (distance_array[1] == "ft") {
-          format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
-        }
-        total_distance += format_distance
+    distance = response.routes[0].legs[0].distance.text
+    duration = response.routes[0].legs[0].duration.text
 
-      } else {
-        window.alert('Directions request failed due to ' + status);
-      }
-    console.log("COMPLETE DIRECTION SERVICE")
-    console.log(total_distance)
+    format_distance = 0
+    distance_array = distance.split(" ")
+    if (distance_array[1] == "mi") {
+      format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
+    } else if (distance_array[1] == "ft") {
+      format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
     }
-  )
-  // service.getDistanceMatrix(
-  //   {
-  //     origins: origins,
-  //     destinations: destinations,
-  //     travelMode: google.maps.TravelMode.DRIVING,
-  //     unitSystem: google.maps.UnitSystem.IMPERIAL,
-  //   }, 
-  //   function(response, status) {
-  //     if (status == google.maps.DistanceMatrixStatus.OK) {
-  //       var origins = response.originAddresses;
-  //       var destinations = response.destinationAddresses;
+    total_distance += format_distance
 
-  //       var element = response.rows[0].elements[0]
-  //       if (element.status == "OK") {
-  //         var distance = element.distance.text;
-  //         var duration = element.duration.text;
-  //         var from = origins[0];
-  //         var to = destinations[0];
-          // format_distance = 0
-          // distance_array = distance.split(" ")
-          // if (distance_array[1] == "mi") {
-          //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
-          // } else if (distance_array[1] == "ft") {
-          //   format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
-          // }
-  //         // total_distance += format_distance
-  //         // values = []              
-  //         // values.push(format_distance)
-  //         // values.push(duration)
-  //       }
-  //     }
-  //     // document.getElementById("responses").innerHTML = format_distance
-  //     // document.getElementById("temp1").innerHTML = values[0]
-  //     // document.getElementById("temp2").innerHTML = values[1]
-  //     // console.log(parseFloat(document.getElementById("temp1").innerHTML))
-  //   }
-  // )
+  } else {
+    window.alert('Directions request failed due to ' + status);
   }
+  console.log("COMPLETE DIRECTION SERVICE")
+  console.log(total_distance)
+}
 
 //PEOPLE ARRAY 
 
@@ -202,17 +163,23 @@ function run_delivery(address_array) {
   total_distance = 0
   total_duration = 0
 
+  modified_address_array = []
+
   for (i = 0; i<(address_array.length-1); i++) {
     origin = address_array[i]
     destination = address_array[i+1]
-    console.log(origin)
-    console.log(destination)
+    
+    pair_array = [origin, destination]
 
-    conduct_distance_calc(origin, destination)
+    modified_address_array.push(pair_array)
   }
+
+  async.eachSeries(modified_address_array, conduct_distance_calc(address_pair), function(err){
+    console.log(err)
+  })
 }
 
-function conduct_distance_calc(origin, destination) {
+function conduct_distance_calc(address_pair) {
   calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
 }
 
