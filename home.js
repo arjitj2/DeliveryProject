@@ -56,15 +56,20 @@ function distanceMatrix(service, origins, destinations) {
             var element = results[j];
             if (element.status == "OK") {
               var distance = element.distance.text;
-              // var duration = element.duration.text;
-              // var from = origins[i];
-              // var to = destinations[j];
+              var duration = element.duration.text;
+              var from = origins[i];
+              var to = destinations[j];
               distances[distances.length] = distance
+              values = []              
+              values.push(distance)
+              values.push(duration)
             }
           }
         }
       }
       document.getElementById("responses").innerHTML = distances
+      document.getElementById("temp1").innerHTML = values[0]
+      document.getElementById("temp2").innerHTML = values[1]
     }
   )
 }
@@ -136,6 +141,51 @@ function get_latitude() {
 
 //DISTANCE FOR DELIVERY CYCLE
 
-function perform_delivery() {
-  
+function perform_home_delivery() {
+  delivery_address = document.getElementById("warehouse").value
+
+  address_array = generate_home_address_array(delivery_address)
+
+  calc_values = run_delivery(address_array)
+
+  document.getElementById("total_distance").innerHTML = "Total Distance: " + calc_values[0]
+  document.getElementById("total_duration").innerHTML = "Total Duration: " + calc_values[1]
 }
+
+function generate_home_address_array(delivery_address) {
+  address_array = [delivery_address]
+
+  for (i=0; i<people.length; i++) {
+    home_address = people[i].home
+    address_array.push(home_address)
+  };
+
+  address_array.push(delivery_address)
+
+  return address_array
+}
+
+function run_delivery(address_array) {
+  total_distance = 0
+  total_duration = 0
+  service = new google.maps.DistanceMatrixService()
+
+  for (i = 0; i<(address_array.length-1); i++) {
+    origins = [address_array[i]]
+    destinations = [address_array[i+1]]
+
+    distanceMatrix(service, origins, destinations)
+
+    // total_distance = total_distance + calc_values[0]
+    // total_duration = total_distance + calc_values[1]
+  }
+
+  return [total_distance, total_duration]
+}
+
+
+
+
+
+
+

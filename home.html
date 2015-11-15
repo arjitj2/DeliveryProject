@@ -28,13 +28,18 @@
       <button onclick="createPeople()">Create People</button>
     </div>
     <div id="delivery_inputs">
+      <h4>Delivery to Homes</h4>
       <h5>Generate People First!</h5>
       Warehouse Address:<br><input type="text" id="warehouse" value="Peoria, IL"><br>
-      <button onclick="perform_delivery()">Perform Delivery</button>
+      <button onclick="perform_home_delivery()">Perform Delivery</button>
     </div>
     <div id="outputs">
+      <p id="total_distance"></p><br>
+      <p id="total_duration"></p>
       <p id="responses"></p>
       <p id="people_array"></p>
     </div>
+    <p display="hidden" id="temp1"></p>
+    <p display="hidden" id="temp2"></p>
   </body>
 </html>
