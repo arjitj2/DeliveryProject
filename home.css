@@ -25,6 +25,13 @@ html, body {
   border: 2px solid black;
 }
 
+#delivery_inputs {
+  position: relative;
+  float: left;
+  height: 450px;
+  border: 2px solid black;
+}
+
 #outputs {
   position: relative;
   float: left;
