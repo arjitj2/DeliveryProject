@@ -60,13 +60,15 @@ function callback(response, status) {
     } else if (distance_array[1] == "ft") {
       format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
     }
+    console.log(format_distance)
     total_distance += format_distance
 
+    document.getElementById("total_distance").innerHTML = "Total Distance: " + total_distance
+    
   } else {
     window.alert('Directions request failed due to ' + status);
   }
   console.log("COMPLETE DIRECTION SERVICE")
-  console.log(total_distance)
 }
 
 //PEOPLE ARRAY 
@@ -142,8 +144,6 @@ function perform_home_delivery() {
   address_array = generate_home_address_array(delivery_address)
 
   run_delivery(address_array)
-
-  document.getElementById("total_distance").innerHTML = "Total Distance: " + total_distance
 }
 
 function generate_home_address_array(delivery_address) {
@@ -174,13 +174,20 @@ function run_delivery(address_array) {
     modified_address_array.push(pair_array)
   }
 
-  async.eachSeries(modified_address_array, conduct_distance_calc(address_pair), function(err){
-    console.log(err)
+  async.eachSeries(modified_address_array, conduct_distance_calc, function(err) {
+    if(err) {
+      console.log(err)
+    }
   })
 }
 
-function conduct_distance_calc(address_pair) {
+function conduct_distance_calc(address_pair, doneCallback) {
+  origin = address_pair[0]
+  destination = address_pair[1]
+
   calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
+
+  return doneCallback(null)
 }
 
 
