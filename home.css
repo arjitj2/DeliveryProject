@@ -11,14 +11,14 @@ html, body {
   float: left;
 }
 
-#inputs {
+#single_distance {
   position: relative;
   float: left;
   height: 150px;
   border: 2px solid black;
 }
 
-#inputs2 {
+#generate_people {
   position: relative;
   float: left;
   height: 450px;

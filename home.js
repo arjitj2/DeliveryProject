@@ -1,3 +1,5 @@
+//VARIABLE DECLARATION
+
 var map
 var service
 var geocoder
@@ -7,6 +9,8 @@ var destination = ""
 var bias1 = 0.7
 var bias2 = 0.6
 var people = []
+
+//MAP INITIALIZATION
 
 function initMap() {
   map = newMap()
@@ -21,6 +25,8 @@ function newMap() {
     zoom: 13
   })
 }
+
+//DISTANCE CALCULATIONS
 
 function computeInput() {
   distances = []
@@ -63,6 +69,8 @@ function distanceMatrix(service, origins, destinations) {
   )
 }
 
+//PEOPLE ARRAY 
+
 function createPeople() {
   numberofpeople = parseInt(document.getElementById("people").value)
 
@@ -97,6 +105,17 @@ function generate_home_address() {
   return latlng
 }
 
+function generate_work_address() {
+  work_addresses = []
+  work_addresses.push(document.getElementById("parking1").value)
+  work_addresses.push(document.getElementById("parking2").value)
+  work_addresses.push(document.getElementById("parking3").value)
+
+  return work_addresses[Math.floor(Math.random()*work_addresses.length)]
+}
+
+//LATITUDE & LONGITUDE CALCULATIONS
+
 function get_longitude() {
   min_lon = parseFloat(document.getElementById("min_lon").value)
   max_lon = parseFloat(document.getElementById("max_lon").value)
@@ -115,11 +134,8 @@ function get_latitude() {
   return lat
 }
 
-function generate_work_address() {
-  work_addresses = []
-  work_addresses.push(document.getElementById("parking1").value)
-  work_addresses.push(document.getElementById("parking2").value)
-  work_addresses.push(document.getElementById("parking3").value)
+//DISTANCE FOR DELIVERY CYCLE
 
-  return work_addresses[Math.floor(Math.random()*work_addresses.length)]
+function perform_delivery() {
+  
 }
