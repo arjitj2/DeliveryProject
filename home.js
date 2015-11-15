@@ -29,7 +29,6 @@ function newMap() {
 //DISTANCE CALCULATIONS
 
 function computeInput() {
-  distances = []
   service = new google.maps.DistanceMatrixService()
 
   origins = [document.getElementById("origin").value]
@@ -59,9 +58,16 @@ function distanceMatrix(service, origins, destinations) {
               var duration = element.duration.text;
               var from = origins[i];
               var to = destinations[j];
-              distances[distances.length] = distance
+              format_distance = 0
+              distance_array = distance.split(" ")
+              if (distance_array[1] == "mi") {
+                format_distance = parseFloat(distance_array[0])
+              } else if (distance_array[1] == "ft") {
+                format_distance = parseFloat(distance_array[0])/5280
+              }
+              distances[distances.length] = format_distance
               values = []              
-              values.push(distance)
+              values.push(format_distance)
               values.push(duration)
             }
           }
@@ -181,6 +187,10 @@ function run_delivery(address_array) {
   }
 
   return [total_distance, total_duration]
+}
+
+function format_distance(distance) {
+
 }
 
 
