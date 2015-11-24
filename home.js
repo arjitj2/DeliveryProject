@@ -146,15 +146,13 @@ function perform_home_delivery() {
   run_delivery(address_array)
 }
 
-function generate_home_address_array(delivery_address) {
-  address_array = [delivery_address]
+function generate_home_address_array() {
+  address_array = []
 
   for (i=0; i<people.length; i++) {
     home_address = people[i].home
     address_array.push(home_address)
   };
-
-  address_array.push(delivery_address)
 
   return address_array
 }
