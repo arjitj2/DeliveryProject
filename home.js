@@ -35,7 +35,7 @@ function computeInput() {
   calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
 }
 
-function calculateAndDisplayRoute(service, directionsDisplay, origin, destination) {
+function calculateAndDisplayRoute(service, directionsDisplay, origin, destination, waypoints) {
   console.log("BEGIN DIRECTION SERVICE")
   service.route(
     {
@@ -43,6 +43,8 @@ function calculateAndDisplayRoute(service, directionsDisplay, origin, destinatio
       destination: destination,
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,
+      optimizeWaypoints: true,
+      provideRouteAlternatives: false,
     }, callback)
 }
 
@@ -139,11 +141,13 @@ function get_latitude() {
 //DISTANCE FOR DELIVERY CYCLE
 
 function perform_home_delivery() {
-  delivery_address = document.getElementById("warehouse").value
+  warehouse_address = document.getElementById("warehouse").value
 
-  address_array = generate_home_address_array(delivery_address)
+  address_array = generate_home_address_array()
 
-  run_delivery(address_array)
+  waypoint_array = generate_waypoint_array(address_array)
+
+  run_delivery(waypoint_hash, warehouse_address)
 }
 
 function generate_home_address_array() {
@@ -157,36 +161,51 @@ function generate_home_address_array() {
   return address_array
 }
 
-function run_delivery(address_array) {
+function waypoint_hash(address_array) {
+  waypoints = []
+
+  for (var i = 0; i < address_array.length; i++) {
+    waypoints.push({
+      location: address_array[i],
+      stopover: true
+    });
+  }
+
+  return waypoints
+}
+
+function run_delivery(address_array, warehouse_address) {
   total_distance = 0
   total_duration = 0
 
-  modified_address_array = []
+  calculateAndDisplayRoute(service, directionsDisplay, warehouse_address, warehouse_address, address_array)
 
-  for (i = 0; i<(address_array.length-1); i++) {
-    origin = address_array[i]
-    destination = address_array[i+1]
+  // modified_address_array = []
+
+  // for (i = 0; i<(address_array.length-1); i++) {
+  //   origin = address_array[i]
+  //   destination = address_array[i+1]
     
-    pair_array = [origin, destination]
+  //   pair_array = [origin, destination]
 
-    modified_address_array.push(pair_array)
-  }
+  //   modified_address_array.push(pair_array)
+  // }
 
-  async.eachSeries(modified_address_array, conduct_distance_calc, function(err) {
-    if(err) {
-      console.log(err)
-    }
-  })
+  // async.eachSeries(modified_address_array, conduct_distance_calc, function(err) {
+  //   if(err) {
+  //     console.log(err)
+  //   }
+  // })
 }
 
-function conduct_distance_calc(address_pair, doneCallback) {
-  origin = address_pair[0]
-  destination = address_pair[1]
+// function conduct_distance_calc(address_pair, doneCallback) {
+//   origin = address_pair[0]
+//   destination = address_pair[1]
 
-  calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
+//   calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
 
-  return doneCallback(null)
-}
+//   return doneCallback(null)
+// }
 
 
 
