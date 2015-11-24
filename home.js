@@ -32,7 +32,7 @@ function computeInput() {
   origin = document.getElementById("origin").value
   destination = document.getElementById("dest").value
 
-  calculateAndDisplayRoute(service, directionsDisplay, origin, destination)
+  calculateAndDisplayRoute(service, directionsDisplay, origin, destination, [])
 }
 
 function calculateAndDisplayRoute(service, directionsDisplay, origin, destination, waypoints) {
@@ -43,6 +43,7 @@ function calculateAndDisplayRoute(service, directionsDisplay, origin, destinatio
       destination: destination,
       travelMode: google.maps.TravelMode.DRIVING,
       unitSystem: google.maps.UnitSystem.IMPERIAL,
+      waypoints: waypoints,
       optimizeWaypoints: true,
       provideRouteAlternatives: false,
     }, callback)
@@ -52,18 +53,20 @@ function callback(response, status) {
   if (status === google.maps.DirectionsStatus.OK) {
     directionsDisplay.setDirections(response);
 
-    distance = response.routes[0].legs[0].distance.text
-    duration = response.routes[0].legs[0].duration.text
+    for (i=0; i<response.routes[0].legs.length; i++) {
+      distance = response.routes[0].legs[i].distance.text
+      duration = response.routes[0].legs[i].duration.text
 
-    format_distance = 0
-    distance_array = distance.split(" ")
-    if (distance_array[1] == "mi") {
-      format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
-    } else if (distance_array[1] == "ft") {
-      format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
+      format_distance = 0
+      distance_array = distance.split(" ")
+      if (distance_array[1] == "mi") {
+        format_distance = parseFloat(distance_array[0].replace(/,/g, ''))
+      } else if (distance_array[1] == "ft") {
+        format_distance = parseFloat(distance_array[0].replace(/,/g, ''))/5280
+      }
+      console.log(format_distance)
+      total_distance += format_distance
     }
-    console.log(format_distance)
-    total_distance += format_distance
 
     document.getElementById("total_distance").innerHTML = "Total Distance: " + total_distance
     
@@ -147,7 +150,7 @@ function perform_home_delivery() {
 
   waypoint_array = generate_waypoint_array(address_array)
 
-  run_delivery(waypoint_hash, warehouse_address)
+  run_delivery(waypoint_array, warehouse_address)
 }
 
 function generate_home_address_array() {
@@ -161,7 +164,7 @@ function generate_home_address_array() {
   return address_array
 }
 
-function waypoint_hash(address_array) {
+function generate_waypoint_array(address_array) {
   waypoints = []
 
   for (var i = 0; i < address_array.length; i++) {
@@ -174,11 +177,11 @@ function waypoint_hash(address_array) {
   return waypoints
 }
 
-function run_delivery(address_array, warehouse_address) {
+function run_delivery(waypoint_array, warehouse_address) {
   total_distance = 0
   total_duration = 0
 
-  calculateAndDisplayRoute(service, directionsDisplay, warehouse_address, warehouse_address, address_array)
+  calculateAndDisplayRoute(service, directionsDisplay, warehouse_address, warehouse_address, waypoint_array)
 
   // modified_address_array = []
 
