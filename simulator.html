@@ -7,7 +7,7 @@
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_uwnnuuyCHdzY1f8pQyGJKUpmoRk0xhA&signed_in=true"></script>
   </body>
   <style>
-  
+
   html, body {
   height: 100%;
   margin: 0;
@@ -109,7 +109,9 @@
   var markers=[];
   var deliveryProbability;
   var parkingProbability;
-  var parkingIcon='http://www.googlemapsmarkers.com/v1/009900/'
+  var trunkProbability
+  var parkingIcon1='http://www.googlemapsmarkers.com/v1/009900/'
+  var parkingIcon2='http://www.googlemapsmarkers.com/v1/ff0000/'
 
   var findLocation=function(address) {
     if (!geocoder) {
@@ -139,11 +141,15 @@
     document.getElementById("deliveryBias").setAttribute("title", bias)
   }
 
-
+  var trunkBiastooltip=function() {
+    var bias=document.getElementById("trunkBias").value/100;
+    document.getElementById("trunkBias").setAttribute("title", bias)
+  }
 
   function plotPoints() {
       deliveryProbability=document.getElementById("deliveryBias").value/100;
       parkingProbability=document.getElementById("parkingBias").value/100;
+      trunkProbability=document.getElementById("parkingBias").value/100;
       markers.forEach(function(marker) {
         marker.setMap(null);
       });
@@ -164,7 +170,12 @@
             title:doc.address,
         };
         if (parkedFlag) {
-          markerDoc.icon=parkingIcon;
+          if(Math.random()>parkingProbability){
+            markerDoc.icon=parkingIcon1;  
+          }
+          else{
+            markerDoc.icon=parkingIcon2;
+          }
           markerDoc.title="car from "+doc.address+" parked here";
         }
         markers.push(new google.maps.Marker(markerDoc));
@@ -193,6 +204,7 @@
     plotPoints();
     parkingBiastooltip();
     deliveryBiastooltip();
+    trunkBiastooltip();
   }
 </script>
 </head>
@@ -204,6 +216,9 @@
   </div>
   <div class="form-group">
     <label>Parking Bias</label><input id="parkingBias" type="range" class="control" data-toggle="tooltip" onchange="parkingBiastooltip()" min="0" max="100">
+  </div>
+  <div class="form-group">
+    <label>Trunk Bias</label><input id="trunkBias" type="range" class="control" data-toggle="tooltip" onchange="trunkBiastooltip()" min="0" max="100">
   </div>
     <button type="button" class="control btn btn-primary ui-content" onclick="plotPoints()">Submit</button>
 </form>
