@@ -1,0 +1,200 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Rich Sowers project</title>
+  <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_uwnnuuyCHdzY1f8pQyGJKUpmoRk0xhA&signed_in=true"></script>
+  </body>
+  <style>
+  html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  }
+  #map_canvas {
+  height: 100%;
+  width: 100%;
+  }
+  #submit {
+    text-align:center;
+  }
+  .control {
+    text-align:center;
+    width: 20%;
+  }
+  </style>
+
+<!-- jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!--boostrap-->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+  // from http://stackoverflow.com/questions/15925980/using-address-instead-of-longitude-and-latitude-with-google-maps-api
+  //how to get a geocoded location
+  var geocoder;
+  var map;
+  var addresses =[
+    {
+      address:"804 N Lincoln Drive,Urbana,IL,61801",
+      location:{lat:40.119459, lng:-88.219108},
+      parksat:{lat:40.112407, lng:-88.224919}
+    },
+    {
+      address:"822 W Hill St,Urbana, IL 61801",
+      location:{lat:40.1192991, lng:-88.21911920000002},
+      parksat:{lat:40.115813, lng:-88.224799}
+    },
+    {
+      address:"810 W Hill St,Urbana, IL 61801",
+      location:{lat:40.1194149, lng:-88.218097},
+      parksat:{lat:40.112407, lng:-88.224919}
+    },
+    {
+      address:"803 N Busey Ave,Urbana, IL 61801",
+      location:{lat:40.119467, lng:-88.217267},
+      parksat:{lat:40.115006, lng:-88.222714}
+    },
+    {
+      address: "805 Fairview Ave,Urbana, IL 61801",
+      location:{lat:40.119853,lng:-88.217894},
+      parksat:{lat:40.113221,lng:-88.222879}
+    },
+    {
+      address: "815 W Hill St,Urbana, IL 61801",
+      location:{lat:40.118957,lng:-88.218543},
+      parksat:{lat:40.113119,lng:-88.224364}
+    },
+    {
+      address: "808 W Church St,Urbana, IL 61801",
+      location:{lat:40.118420,lng:-88.217970},
+      parksat:{lat:40.115813, lng:-88.224799}
+    },
+    {
+      address: "708 N Lincoln Ave,Urbana, IL 61801",
+      location:{lat:40.118837,lng:-88.219160},
+      parksat:{lat:40.115006,lng:-88.222714}
+    },
+    {
+      address: "707 N Busey Ave,Urbana, IL 61801",
+      location:{lat:40.118839,lng:-88.217214},
+      parksat:{lat:40.113221,lng:-88.222879}
+    },
+    {
+      address: "804 W Church St,Urbana, IL 61801",
+      location:{lat:40.118432,lng:-88.217587},
+      parksat:{lat:40.113119,lng:-88.224364}
+    }
+  ];
+  var markers=[];
+  var deliveryProbability;
+  var parkingProbability;
+  var parkingIcon='http://www.googlemapsmarkers.com/v1/009900/'
+  var findLocation=function(address) {
+    if (!geocoder) {
+      return
+    }
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status != google.maps.GeocoderStatus.OK) {
+        alert("Geocode was not successful at address "+address+" for the following reason: " + status);
+        return;
+      }
+      if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+          alert("No results found for address "+address)
+          return;
+      } 
+      var thisLocation=results[0].geometry.location;
+      alert("address: "+address+"; coordinates: "+thisLocation);
+    });
+  }
+  var parkingBiastooltip=function() {
+    var bias=document.getElementById("parkingBias").value/100;
+    document.getElementById("parkingBias").setAttribute("title", bias)
+  }
+  var deliveryBiastooltip=function() {
+    var bias=document.getElementById("deliveryBias").value/100;
+    document.getElementById("deliveryBias").setAttribute("title", bias)
+  }
+  function plotPoints() {
+      deliveryProbability=document.getElementById("deliveryBias").value/100;
+      parkingProbability=document.getElementById("parkingBias").value/100;
+      markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers=[];
+      addresses.forEach(function(doc) {
+        if (Math.random()>deliveryProbability) {
+          return;
+        }
+        /*var infowindow = new google.maps.InfoWindow(
+          { content: '<b>'+address+'</b>',
+            size: new google.maps.Size(150,50)
+          });*/
+        var parkedFlag=(doc.parksat) && (Math.random()>parkingProbability);
+        var markerDoc = {
+            position: parkedFlag ? doc.parksat : doc.location,
+            map: map, 
+            title:doc.address,
+        };
+        if (parkedFlag) {
+          markerDoc.icon=parkingIcon;
+          markerDoc.title="car from "+doc.address+" parked here";
+        }
+        markers.push(new google.maps.Marker(markerDoc));
+      /*google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+      });*/
+      });
+  }
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+    addresses.forEach(function(doc) {
+      if (!doc.location) {
+        findLocation(doc.address);
+      }
+    })
+    var latlng = new google.maps.LatLng(40.119135,-88.219423);
+    var myOptions = {
+      zoom: 14,
+      center: latlng,
+    mapTypeControl: true,
+    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+    navigationControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    plotPoints();
+    parkingBiastooltip();
+    deliveryBiastooltip();
+  }
+</script>
+</head>
+<body onload="initialize()">
+<div id="submit">
+<form class="form-inline">
+  <div class="form-group">
+    <label>Delivery Bias</label><input id="deliveryBias" data-toggle="tooltip" class="control"  onchange="deliveryBiastooltip()" type="range" min="0" max="100">
+  </div>
+  <div class="form-group">
+    <label>Parking Bias</label><input id="parkingBias" type="range" class="control" data-toggle="tooltip" onchange="parkingBiastooltip()" min="0" max="100">
+  </div>
+    <button type="button" class="control btn btn-primary ui-content" onclick="plotPoints()">Submit</button>
+</form>
+</div>
+
+ <div id="map_canvas">
+</body>
+</html>
