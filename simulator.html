@@ -121,8 +121,9 @@
     });
   }
   var parkingBiastooltip=function() {
-    var bias=document.getElementById("parkingBias").value/100;
-    document.getElementById("parkingBias").setAttribute("title", bias)
+    var bias=document.getElementById("parkingBias").value;
+       document.getElementById("parkingBias").setAttribute("title", bias)
+
   }
   var deliveryBiastooltip=function() {
     var bias=document.getElementById("deliveryBias").value/100;
@@ -130,7 +131,27 @@
   }
   function plotPoints() {
       deliveryProbability=document.getElementById("deliveryBias").value/100;
-      parkingProbability=document.getElementById("parkingBias").value/100;
+      var time=document.getElementById("parkingBias").value;
+    if (time>=900 && time<950) {parkingProbability=.66345;}
+    if (time>=950 && time<1000) {parkingProbability=.7317;}
+    if (time>=1000 && time<1050) {parkingProbability=.6615;}
+    if (time>=1050 && time<1100) {parkingProbability=.8306;}
+    if (time>=1100 && time<1150) {parkingProbability=.77276;}
+    if (time>=1150 && time<1200) {parkingProbability=.71062;}
+    if (time>=1200 && time<1300) {parkingProbability=.702;}
+    if (time>=1300 && time<1350) {parkingProbability=.69355;}
+    if (time>=1350 && time<1400) {parkingProbability=.71452;}
+    if (time>=1400 && time<1450) {parkingProbability=.84595;}
+    if (time>=1450 && time<1500) {parkingProbability=.7104;}
+    if (time>=1500 && time<1550) {parkingProbability=.82;}
+    if (time>=1550 && time<1600) {parkingProbability=.68992;}
+    if (time>=1600 && time<1700) {parkingProbability=.71625;}
+    if (time>=1700 && time<1750) {parkingProbability=.43645;}
+    if (time>=1750 && time<1950) {parkingProbability=.4368;}
+    if (time>=1950 && time<2000) {parkingProbability=.2067;}
+    if (time>=2000 && time<2100) {parkingProbability=.2644;}
+    if (time==2100) {bias=.12;}
+
       markers.forEach(function(marker) {
         marker.setMap(null);
       });
@@ -179,6 +200,7 @@
     plotPoints();
     parkingBiastooltip();
     deliveryBiastooltip();
+
   }
 </script>
 </head>
@@ -189,7 +211,7 @@
     <label>Delivery Bias</label><input id="deliveryBias" data-toggle="tooltip" class="control"  onchange="deliveryBiastooltip()" type="range" min="0" max="100">
   </div>
   <div class="form-group">
-    <label>Parking Bias</label><input id="parkingBias" type="range" class="control" data-toggle="tooltip" onchange="parkingBiastooltip()" min="0" max="100">
+    <label>Time</label><input id="parkingBias" type="range" class="control" data-toggle="tooltip" onchange="parkingBiastooltip()" min="900" max="2100">
   </div>
     <button type="button" class="control btn btn-primary ui-content" onclick="plotPoints()">Submit</button>
 </form>
