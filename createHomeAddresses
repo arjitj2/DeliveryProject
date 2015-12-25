@@ -1,0 +1,46 @@
+function createHomeAddresses(int number){
+	var HomeAddresses = [];
+	for (i=0; i<number; i++) {
+    	HomeAdresses[HomeAddresses.length] = generate_home_address()
+    }
+    return HomeAddresses;
+}
+
+function generate_home_address() {
+  latitude = get_latitude().toString()
+  longitude = get_longitude().toString()
+
+  latlng = latitude + ", " + longitude
+  return reverseGeocode(latlng)
+}
+
+function get_longitude() {
+  min_lon = parseFloat(document.getElementById("min_lon").value)
+  max_lon = parseFloat(document.getElementById("max_lon").value)
+  lon_range = max_lon - min_lon
+
+  lng = min_lon + (Math.random() * lon_range)
+  return lng
+}
+
+function get_latitude() {
+  min_lat = parseFloat(document.getElementById("min_lat").value)
+  max_lat = parseFloat(document.getElementById("max_lat").value)
+  lat_range = max_lat - min_lat
+
+  lat = min_lat + (Math.random() * lat_range)
+  return lat
+}
+
+function reverseGeocode(markerPos){
+	geocoder.geocode({'latLng': markerPos}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+        	if (results[0]) {
+        		//Set markerAddress variable
+        		var markerAddress = results[0].formatted_address
+				alert(markerAddress)
+				return markerAddress
+			}
+		}
+	}
+}
